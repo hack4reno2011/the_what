@@ -33,60 +33,58 @@
               map: map,
               position: results[0].geometry.location,
             });
+            $.ajax({
+              url: 'https://api.foursquare.com/v2/venues/explore?ll=' + latlng.toUrlValue(3) + '&llAcc=10&radius=4828&limit=50&client_id=JD1SH050Z32DQ3IRI4ND4J5LKFUEQOOJ1ENBJRQAGR32TWSJ&client_secret=1RQDNQYUXO3F5OR5SD0JAE1LZHBTBNY0EON3JR2OSGUEL1MB',
+              success: function(data) {
+                var foursquare = data.response.groups[0].items;
+                var hottest = 0;
+                var theretotal = 0;
+                var therenow = 0;
+                for (var i = 0; i < foursquare.length; i++) {
+                  if (foursquare[i].venue.hereNow.count > therenow) {
+                    hottest = i;
+                    theretotal = foursquare[i].venue.stats.checkinsCount;
+                    therenow = foursquare[i].venue.hereNow.count;
+                  } else if (foursquare[i].venue.hereNow.count == therenow) {
+                    if (foursquare[i].venue.stats.checkinsCount > theretotal) {
+                      hottest = i;
+                      theretotal = foursquare[i].venue.stats.checkinsCount;
+                      therenow = foursquare[i].venue.hereNow.count;
+                    }
+                  }
+                }
+
+                var contentString = '<div class="infowindow">' +
+                  '<h3>' +
+                  '<img src="' +
+                  foursquare[hottest].venue.categories[0].icon +
+                  '" />&nbsp;' +
+                  '<a href="https://foursquare.com/v/squeeze-in/' +
+                  foursquare[hottest].venue.id +
+                  '">' +
+                  foursquare[hottest].venue.name +
+                  '</a>' +
+                  '</h3>' +
+                  '</div>';
+
+                if (infowindow) {
+                  infowindow.close();
+                }
+                infowindow = new google.maps.InfoWindow({
+                    content: contentString,
+                    maxWidth: 200,
+                    position: new google.maps.LatLng(foursquare[hottest].venue.location.lat, foursquare[hottest].venue.location.lng),
+                });
+
+                infowindow.open(map);
+
+                $("#overlay").animate({height: "150px"});
+                $("#search-form").css("margin-top", "15px");
+              },
+            });
           } else {
             alert("Geocode was not successful for the following reason: " + status);
           }
-        });
-        $.ajax({
-          url: 'https://api.foursquare.com/v2/venues/explore?ll=' + latlng.toUrlValue(3) + '&client_id=JD1SH050Z32DQ3IRI4ND4J5LKFUEQOOJ1ENBJRQAGR32TWSJ&client_secret=1RQDNQYUXO3F5OR5SD0JAE1LZHBTBNY0EON3JR2OSGUEL1MB',
-          success: function(data) {
-            var foursquare = data.response.groups[0].items;
-            var hottest = 0;
-            var therenow = -1;
-            for (var i = 0; i < foursquare.length; i++) {
-              if (foursquare[i].venue.hereNow.count > therenow) {
-                hottest = i;
-              }
-            }
-
-            var contentString = '<div id="content">'+
-                '<h1 id="firstHeading" class="firstHeading">' + foursquare[hottest].venue.name + '</h1>'+
-                '<div id="bodyContent">'+
-                '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
-                'sandstone rock formation in the southern part of the '+
-                'Northern Territory, central Australia. It lies 335 km (208 mi) '+
-                'south west of the nearest large town, Alice Springs; 450 km '+
-                '(280 mi) by road. Kata Tjuta and Uluru are the two major '+
-                'features of the Uluru - Kata Tjuta National Park. Uluru is '+
-                'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
-                'Aboriginal people of the area. It has many springs, waterholes, '+
-                'rock caves and ancient paintings. Uluru is listed as a World '+
-                'Heritage Site.</p>'+
-                '<p>Attribution: Uluru, <a href="http://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
-                'http://en.wikipedia.org/w/index.php?title=Uluru</a> (last visited June 22, 2009).</p>'+
-                '</div>'+
-                '</div>';
-
-            if (infowindow) {
-              infowindow.close();
-            }
-            infowindow = new google.maps.InfoWindow({
-                content: contentString,
-                maxWidth: 200,
-                position: new google.maps.LatLng(foursquare[hottest].venue.location.lat, foursquare[hottest].venue.location.lng),
-            });
-
-//            var marker = new google.maps.Marker({
-//                position: new google.maps.LatLng(foursquare[hottest].venue.location.lat, foursquare[hottest].venue.location.lng),
-//                map: map,
-//                title: foursquare[hottest].venue.name,
-//            });
-
-            infowindow.open(map);
-
-            $("#overlay").animate({height: "150px"});
-            $("#search-form").css("margin-top", "15px");
-          },
         });
         return false;
       });
