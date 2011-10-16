@@ -34,6 +34,10 @@ namespace :deploy do
     sudo "chown -R apache:apache #{latest_release}"
     sudo "chown -h apache:apache #{deploy_to}/#{current_dir}"
   end
+  desc "Compile assets"
+  task :assets, :roles => :app do
+    run "cd #{current_path} && #{sudo :as => 'apache'} /usr/local/rvm/bin/rvm #{rvm_ruby_string} exec bundle exec rake assets:precompile RAILS_ENV=#{rails_env}"
+  end
 end
 
 namespace :unicorn do
@@ -58,6 +62,7 @@ namespace :unicorn do
   end
 end
 
+before 'deploy:symlink', 'deploy:assets'
 after 'deploy:symlink', 'deploy:fix_ownership'
 after 'deploy:start', 'unicorn:start'
 after 'deploy:restart', 'unicorn:reload'
