@@ -5,8 +5,10 @@ gem 'rails', '3.1.1'
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
+gem 'bson_ext'
 gem 'mongoid'
-
+gem 'json'
+gem 'oauth'
 
 # Gems used only for assets and not required
 # in production environments by default.
