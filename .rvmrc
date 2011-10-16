@@ -1,0 +1,2 @@
+rvm use --install --create ruby-1.9.3-rc1@the_what
+gem install --conservative bundler | grep "Successfully" && bundle install
