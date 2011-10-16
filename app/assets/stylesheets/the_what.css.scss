@@ -33,13 +33,13 @@ body {
     linear,
     left bottom,
     left top,
-    color-stop(1, rgba(150,150,150,0.5)),
-    color-stop(0, rgba(150,150,150,0.75))
+    color-stop(1, rgba(255,255,255,0.85)),
+    color-stop(0, rgba(150,150,150,0.5))
   );
   background-image: -moz-linear-gradient(
     center top,
-    rgba(150,150,150,0.5),
-    rgba(150,150,150,0.75)
+    rgba(255,255,255,0.85),
+    rgba(150,150,150,0.5)
   );
   text-align: center;
 }
@@ -49,7 +49,6 @@ body {
 }
 #outer > h1 {
   color: #ffffff;
-  background: #000000;
 }
 #middle {
   position: absolute;

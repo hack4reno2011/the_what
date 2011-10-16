@@ -32,6 +32,7 @@
             var marker = new google.maps.Marker({
               map: map,
               position: results[0].geometry.location,
+              icon: new google.maps.MarkerImage('http://thewhat.co/pin.png'),
             });
             $.ajax({
               url: 'https://api.foursquare.com/v2/venues/explore?ll=' + latlng.toUrlValue(3) + '&llAcc=10&radius=4828&limit=50&client_id=JD1SH050Z32DQ3IRI4ND4J5LKFUEQOOJ1ENBJRQAGR32TWSJ&client_secret=1RQDNQYUXO3F5OR5SD0JAE1LZHBTBNY0EON3JR2OSGUEL1MB',
@@ -96,7 +97,7 @@
 <div id="map_canvas" style="width:100%; height:100%;"></div>
 <div id="overlay">
   <div id="outer">
-    <h1>The WHAT</h1>
+    <h1><img src="/the_what.png" /></h1>
     <div id="middle">
       <div id="search-form">
         <form class="ui-form">
