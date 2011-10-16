@@ -1,0 +1,20 @@
+development:
+  host: localhost
+  database: the_what_development
+
+test:
+  host: localhost
+  database: the_what_test
+
+# set these environment variables on your prod server
+production:
+  host: localhost
+  port: 27017
+  username: <%= ENV['MONGOID_USERNAME'] %>
+  password: <%= ENV['MONGOID_PASSWORD'] %>
+  database: the_what_production
+  # slaves:
+  #   - host: slave1.local
+  #     port: 27018
+  #   - host: slave2.local
+  #     port: 27019
