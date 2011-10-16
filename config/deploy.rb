@@ -36,14 +36,14 @@ namespace :deploy do
   end
   desc "Compile assets"
   task :assets, :roles => :app do
-    run "cd #{current_path} && #{sudo :as => 'apache'} /usr/local/rvm/bin/rvm #{rvm_ruby_string} exec bundle exec rake assets:precompile RAILS_ENV=#{rails_env}"
+    run "cd #{current_path} && #{sudo :as => 'apache'} /usr/local/rvm/bin/rvm #{rvm_ruby_string} do bundle exec rake assets:precompile RAILS_ENV=#{rails_env}"
   end
 end
 
 namespace :unicorn do
   desc "Start unicorn"
   task :start, :roles => :app, :except => { :no_release => true } do
-    run "cd #{current_path} && #{sudo :as => 'apache'} /usr/local/rvm/bin/rvm #{rvm_ruby_string} exec bundle exec unicorn -E #{rails_env} -c #{current_path}/config/unicorn.rb -D"
+    run "cd #{current_path} && #{sudo :as => 'apache'} /usr/local/rvm/bin/rvm #{rvm_ruby_string} do bundle exec unicorn -E #{rails_env} -c #{current_path}/config/unicorn.rb -D"
   end
 
   desc "Stop unicorn"
