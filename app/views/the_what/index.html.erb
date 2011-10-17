@@ -5,6 +5,8 @@
   <script type="text/javascript">
   <!--
     $(document).ready(function(){
+      $('#search-form input[type="submit"]').button();
+
       var geocoder = new google.maps.Geocoder();
       var latlng = new google.maps.LatLng(39.529,-119.814);
       var myOptions = {
@@ -20,11 +22,14 @@
           style: google.maps.ZoomControlStyle.DEFAULT,
         },
       };
-      var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+      var map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+      var youarehere = new google.maps.MarkerImage('<%= request.url %>youarehere.png', new google.maps.Size(48, 48));
+      var pin = new google.maps.MarkerImage('<%= request.url %>pin.png', new google.maps.Size(24, 24));
+      var marker;
       var infowindow;
 
-      $("#search-form > form").submit(function(){
-        var address = $("#search").val();
+      $('#search-form > form').submit(function(){
+        var address = $('#search').val();
         geocoder.geocode( { 'address': address}, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
             latlng = results[0].geometry.location;
@@ -32,7 +37,7 @@
             var marker = new google.maps.Marker({
               map: map,
               position: results[0].geometry.location,
-              icon: new google.maps.MarkerImage('http://thewhat.co/pin.png'),
+              icon: pin,
             });
             $.ajax({
               url: 'https://api.foursquare.com/v2/venues/explore?ll=' + latlng.toUrlValue(3) + '&llAcc=10&radius=4828&limit=50&client_id=JD1SH050Z32DQ3IRI4ND4J5LKFUEQOOJ1ENBJRQAGR32TWSJ&client_secret=1RQDNQYUXO3F5OR5SD0JAE1LZHBTBNY0EON3JR2OSGUEL1MB',
@@ -60,7 +65,9 @@
                   '<img src="' +
                   foursquare[hottest].venue.categories[0].icon +
                   '" />&nbsp;' +
-                  '<a href="https://foursquare.com/v/squeeze-in/' +
+                  '<a href="https://foursquare.com/v/' +
+                  foursquare[hottest].venue.name.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s/g, '-') +
+                  '/' +
                   foursquare[hottest].venue.id +
                   '">' +
                   foursquare[hottest].venue.name +
@@ -79,16 +86,17 @@
 
                 infowindow.open(map);
 
-                $("#overlay").animate({height: "150px"});
-                $("#search-form").css("margin-top", "15px");
+                $('#overlay').animate({height: '150px'});
+                $('#search-form').css('margin-top', '24px');
               },
             });
           } else {
-            alert("Geocode was not successful for the following reason: " + status);
+            alert('Geocode was not successful for the following reason: ' + status);
           }
         });
         return false;
       });
+      $('#search-form > form').submit();
     });
   // -->
   </script>
